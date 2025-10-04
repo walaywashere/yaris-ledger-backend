@@ -11,7 +11,10 @@
     "format": "prettier --write .",
     "check": "tsc --noEmit",
     "verify": "npm run lint && npm run check",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
@@ -24,16 +27,19 @@
     "jsonwebtoken": "^9.0.2",
     "zod": "^3.24.1"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
     "@types/node": "^22.7.4",
-  "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.6",
-  "@typescript-eslint/eslint-plugin": "^8.10.0",
-  "@typescript-eslint/parser": "^8.10.0",
-  "eslint": "^9.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^3.3.3",

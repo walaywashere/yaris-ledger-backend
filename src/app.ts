@@ -9,6 +9,9 @@ import { authRouter } from './routes/auth.js';
 import { customersRouter } from './routes/customers.js';
 import { healthRouter } from './routes/health.js';
 import { locationsRouter } from './routes/locations.js';
+import { reportsRouter } from './routes/reports.js';
+import { salesRouter } from './routes/sales.js';
+import { settingsRouter } from './routes/settings.js';
 
 const env = createEnvConfig();
 
@@ -30,6 +33,9 @@ export const createApp = () => {
   app.use('/api/auth', authRouter);
   app.use('/api/locations', locationsRouter);
   app.use('/api/customers', customersRouter);
+  app.use('/api/sales', salesRouter);
+  app.use('/api/settings', settingsRouter);
+  app.use('/api/reports', reportsRouter);
 
   app.get('/api/version', (_req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'yaris-ledger-backend-rewrite' });
