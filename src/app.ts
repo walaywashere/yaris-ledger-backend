@@ -1,8 +1,11 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { createEnvConfig } from './config/env.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { authRouter } from './routes/auth.js';
 import { healthRouter } from './routes/health.js';
 
 const env = createEnvConfig();
@@ -19,17 +22,16 @@ export const createApp = () => {
     })
   );
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use('/api/health', healthRouter);
+  app.use('/api/auth', authRouter);
 
   app.get('/api/version', (_req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'yaris-ledger-backend-rewrite' });
   });
 
-  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error('Unhandled error', err);
-    res.status(500).json({ error: 'Internal server error' });
-  });
+  app.use(errorHandler);
 
   return app;
 };
