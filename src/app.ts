@@ -1,6 +1,6 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 
 import { createEnvConfig } from './config/env.js';
@@ -12,6 +12,7 @@ import { locationsRouter } from './routes/locations.js';
 import { reportsRouter } from './routes/reports.js';
 import { salesRouter } from './routes/sales.js';
 import { settingsRouter } from './routes/settings.js';
+import { versionRouter } from './routes/version.js';
 
 const env = createEnvConfig();
 
@@ -36,10 +37,7 @@ export const createApp = () => {
   app.use('/api/sales', salesRouter);
   app.use('/api/settings', settingsRouter);
   app.use('/api/reports', reportsRouter);
-
-  app.get('/api/version', (_req: Request, res: Response) => {
-    res.json({ status: 'ok', service: 'yaris-ledger-backend-rewrite' });
-  });
+  app.use('/api/version', versionRouter);
 
   app.use(errorHandler);
 

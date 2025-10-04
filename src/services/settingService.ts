@@ -1,17 +1,9 @@
 import { Prisma } from '@prisma/client';
 
 import { prisma } from '../prisma/client.js';
-import { NotFoundError, ValidationError } from '../utils/errors.js';
+import { NotFoundError } from '../utils/errors.js';
+import { ensureJsonValue } from '../utils/json.js';
 import type { ListSettingsQuery, UpdateSettingInput } from '../validators/settingSchemas.js';
-
-const ensureJsonValue = (value: unknown): Prisma.InputJsonValue => {
-  try {
-    JSON.stringify(value);
-    return value as Prisma.InputJsonValue;
-  } catch {
-    throw new ValidationError('Setting value must be JSON-serializable');
-  }
-};
 
 export const listSettings = async (filters: ListSettingsQuery) => {
   return prisma.setting.findMany({
@@ -41,12 +33,12 @@ export const upsertSetting = async (key: string, input: UpdateSettingInput) => {
     where: { key },
     create: {
       key,
-  value: ensureJsonValue(input.value),
+      value: ensureJsonValue(input.value, 'Setting value must be JSON-serializable'),
       description: input.description,
       updatedById: input.updatedById ?? null
     },
     update: {
-  value: ensureJsonValue(input.value),
+      value: ensureJsonValue(input.value, 'Setting value must be JSON-serializable'),
       description: input.description,
       updatedById: input.updatedById ?? null
     }

@@ -48,6 +48,22 @@ const main = async () => {
     }
   });
 
+  const hasVersion = await prisma.deploymentVersion.count();
+
+  if (hasVersion === 0) {
+    await prisma.deploymentVersion.create({
+      data: {
+        version: '0.0.0',
+        commit: 'seed',
+        environment: env.NODE_ENV ?? 'development',
+        automated: false,
+        metadata: {
+          note: 'Initial seed version placeholder'
+        }
+      }
+    });
+  }
+
   console.log('Seed completed.');
   console.log('Admin credentials -> username: admin | password:', DEFAULT_ADMIN_PASSWORD);
   console.log('Default location id:', defaultLocation.id);

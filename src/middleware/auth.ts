@@ -3,7 +3,7 @@ import type { RequestHandler } from 'express';
 import { getUserFromAccessToken } from '../services/authService.js';
 import { verifyAccessToken } from '../services/tokenService.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { AuthenticationError } from '../utils/errors.js';
+import { AuthenticationError, AuthorizationError } from '../utils/errors.js';
 
 const extractBearerToken = (authorization?: string) => {
   if (!authorization) {
@@ -19,7 +19,7 @@ const extractBearerToken = (authorization?: string) => {
   return token.trim();
 };
 
-export const requireAuth: RequestHandler = asyncHandler(async (req, _res, _next) => {
+export const requireAuth: RequestHandler = asyncHandler(async (req, _res, next) => {
   const token = extractBearerToken(req.headers.authorization);
 
   if (!token) {
@@ -31,4 +31,17 @@ export const requireAuth: RequestHandler = asyncHandler(async (req, _res, _next)
 
   req.tokenPayload = payload;
   req.user = user;
+  next();
 });
+
+export const requireAdmin: RequestHandler = (req, _res, next) => {
+  if (!req.user) {
+    return next(new AuthenticationError('Authentication required'));
+  }
+
+  if (req.user.role !== 'ADMIN') {
+    return next(new AuthorizationError('Administrator privileges required'));
+  }
+
+  return next();
+};

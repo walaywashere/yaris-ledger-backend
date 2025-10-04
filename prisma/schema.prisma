@@ -118,3 +118,17 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
 }
+
+model DeploymentVersion {
+  id           String   @id @default(uuid())
+  version      String
+  commit       String
+  environment  String   @default("development")
+  deploymentId String?
+  automated    Boolean  @default(true)
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([environment, createdAt])
+  @@index([createdAt])
+}
