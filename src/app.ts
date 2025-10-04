@@ -6,7 +6,9 @@ import helmet from 'helmet';
 import { createEnvConfig } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { authRouter } from './routes/auth.js';
+import { customersRouter } from './routes/customers.js';
 import { healthRouter } from './routes/health.js';
+import { locationsRouter } from './routes/locations.js';
 
 const env = createEnvConfig();
 
@@ -26,6 +28,8 @@ export const createApp = () => {
 
   app.use('/api/health', healthRouter);
   app.use('/api/auth', authRouter);
+  app.use('/api/locations', locationsRouter);
+  app.use('/api/customers', customersRouter);
 
   app.get('/api/version', (_req: Request, res: Response) => {
     res.json({ status: 'ok', service: 'yaris-ledger-backend-rewrite' });

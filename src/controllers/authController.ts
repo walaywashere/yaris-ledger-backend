@@ -5,6 +5,7 @@ import { loginWithPassword, refreshSession, logoutSession } from '../services/au
 import { REFRESH_TOKEN_COOKIE_NAME, refreshTokenCookieOptions } from '../services/tokenService.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { AuthenticationError } from '../utils/errors.js';
+import { parseWithSchema } from '../utils/validation.js';
 import { loginSchema, refreshSchema } from '../validators/authSchemas.js';
 
 const env = createEnvConfig();
@@ -19,7 +20,7 @@ const extractIdentifier = (body: Request['body']) =>
         : '');
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
-  const parsed = loginSchema.parse({
+  const parsed = parseWithSchema(loginSchema, {
     identifier: extractIdentifier(req.body),
     password: req.body?.password
   });
@@ -40,7 +41,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
   const incomingToken = req.cookies?.[REFRESH_TOKEN_COOKIE_NAME] ?? req.body?.refreshToken;
 
-  const parsed = refreshSchema.parse({ refreshToken: incomingToken });
+  const parsed = parseWithSchema(refreshSchema, { refreshToken: incomingToken });
 
   const result = await refreshSession(parsed.refreshToken);
 

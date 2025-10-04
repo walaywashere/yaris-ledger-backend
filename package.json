@@ -10,6 +10,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write .",
     "check": "tsc --noEmit",
+    "verify": "npm run lint && npm run check",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
